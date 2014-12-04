@@ -1,0 +1,16 @@
+{
+    "name": "dividebv/phpdivideiq",
+    "type": "library",
+    "description": "PHP connector library for Divide IQ",
+    "homepage": "https://github.com/DivideBV/PHPDivideIQ",
+    "license": "GPL-2.0",
+    "require": {
+        "php": ">=5.4.0",
+        "guzzlehttp/guzzle": "~5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DivideBV\\PHPDivideIQ\\": ["src"]
+        }
+    }
+}
