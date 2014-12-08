@@ -1,5 +1,28 @@
 <?php namespace DivideBV\PHPDivideIQ;
 
+/**
+ * This file is part of PHPDivideIQ.
+ *
+ * PHPDivideIQ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * PHPDivideIQ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with PHPDivideIQ.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * @todo
+ * - Track settings.
+ * - Serialize and unserialize the client object to/from JSON for persistancy.
+ */
+
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\RequestException;
 
@@ -83,9 +106,13 @@ class DivideIQ
      *     (optional) The HTTP method to use to access the service. Defaults to
      *     `GET`.
      *
-     * @todo Add list of services to automagically connect to.
+     * @see http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods
+     *
+     * @todo
+     * - Add list of services to automagically connect to.
+     * - Automatically update settings object.
      */
-    public function access($serviceName, $payload = [], $method = 'GET')
+    public function request($serviceName, $payload = [], $method = 'GET')
     {
         // Setup the connection.
         $this->setup();
@@ -113,7 +140,8 @@ class DivideIQ
         // Parse the response body.
         $body = $response->json(['object' => true])->{'nl.divide.iq'};
 
-        return $body;
+        // Return the only the response content, without the metadata.
+        return $body->response->content;
     }
 
     /**
