@@ -17,7 +17,7 @@
  * along with PHPDivideIQ.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Token
+class Token implements \JsonSerializable
 {
     /**
      * The token string.
@@ -78,5 +78,44 @@ class Token
         $date = $date ?: new \DateTime('now', new \DateTimezone('UTC'));
 
         return ($date > $this->expire);
+    }
+
+    /**
+     * Serializes the object using JSON.
+     *
+     * @return string
+     *     The JSON representation of the object.
+     */
+    public function toJson()
+    {
+        return json_encode($this);
+    }
+
+    /**
+     * Unserializes the object from JSON.
+     *
+     * @param string $json
+     *     The object as serialized using JSON.
+     *
+     * @return DivideBV\PHPDivideIQ\Token
+     *     The unserialized object.
+     */
+    public static function fromJson($json)
+    {
+        $data = json_decode($json);
+
+        // Recreate the object.
+        return new static($data->token, new \DateTime($data->expire, new \DateTimeZone('UTC')));
+    }
+
+    /**
+     * Implements \JsonSerializable::jsonSerialize.
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'token' => $this->token,
+            'expire' => $this->expire ? $this->expire->format('c') : null,
+        ];
     }
 }

@@ -20,13 +20,12 @@
 /**
  * @todo
  * - Track settings.
- * - Serialize and unserialize the client object to/from JSON for persistancy.
  */
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\RequestException;
 
-class DivideIQ
+class DivideIQ implements \JsonSerializable
 {
     /**
      * The HTTP client used to establish the connection with Divide.IQ.
@@ -142,6 +141,54 @@ class DivideIQ
 
         // Return the only the response content, without the metadata.
         return $body->response->content;
+    }
+
+    /**
+     * Serializes the object using JSON.
+     *
+     * @return string
+     *     The JSON representation of the object.
+     */
+    public function toJson()
+    {
+        return json_encode($this);
+    }
+
+    /**
+     * Unserializes the object from JSON.
+     *
+     * @param string $json
+     *     The object as serialized using JSON.
+     *
+     * @return DivideBV\PHPDivideIQ\DivideIQ
+     *     The unserialized object.
+     */
+    public static function fromJson($json)
+    {
+        $data = json_decode($json);
+
+        // Recreate the object.
+        $object = new static($data->url, $data->username, $data->password);
+        $object->authToken = Token::fromJson(json_encode($data->authToken));
+        $object->accessToken = Token::fromJson(json_encode($data->accessToken));
+        $object->refreshToken = Token::fromJson(json_encode($data->refreshToken));
+
+        return $object;
+    }
+
+    /**
+     * Implements \JsonSerializable::jsonSerialize.
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'url' => $this->client->getBaseUrl(),
+            'username' => $this->username,
+            'password' => $this->password,
+            'authToken' => $this->authToken,
+            'accessToken' => $this->accessToken,
+            'refreshToken' => $this->refreshToken,
+        ];
     }
 
     /**
