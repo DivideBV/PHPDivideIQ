@@ -69,6 +69,13 @@ class DivideIQ implements \JsonSerializable
     protected $refreshToken;
 
     /**
+     * The settings of this account.
+     *
+     * @var Settings
+     */
+    protected $settings;
+
+    /**
      * Creates a Divide.IQ client.
      *
      * @param string $username
@@ -148,6 +155,11 @@ class DivideIQ implements \JsonSerializable
         // Parse the response body.
         $body = $response->json(['object' => true])->{'nl.divide.iq'};
 
+        // Check if the settings object is outdated. If so, unset it.
+        if ($this->settings->isOutdated($body->settings_updated)) {
+            unset($this->settings);
+        }
+
         // Check if there was an error.
         if (!isset($body->response->content)) {
             $message = $body->response->answer;
@@ -190,6 +202,7 @@ class DivideIQ implements \JsonSerializable
         $object->authToken = Token::fromJson(json_encode($data->authToken));
         $object->accessToken = Token::fromJson(json_encode($data->accessToken));
         $object->refreshToken = Token::fromJson(json_encode($data->refreshToken));
+        $object->settings = Settings::fromJson(json_encode($data->settings));
 
         return $object;
     }
@@ -206,6 +219,7 @@ class DivideIQ implements \JsonSerializable
             'authToken' => $this->authToken,
             'accessToken' => $this->accessToken,
             'refreshToken' => $this->refreshToken,
+            'settings' => $this->settings,
         ];
     }
 
@@ -215,37 +229,54 @@ class DivideIQ implements \JsonSerializable
     protected function setup()
     {
         // Check if a valid access token exists.
-        if ($this->accessToken && !$this->accessToken->expired()) {
-            // A valid access token exists, so no need to do anything else.
-            return;
-        }
+        if (!$this->accessToken || $this->accessToken->expired()) {
+            // Check if a refresh token exists.
+            if ($this->refreshToken) {
+                // Attempt to use the refresh token.
+                try {
+                    $this->refresh();
+                } catch (RequestException $e) {
+                    // Check if the exception is due to an HTTP 403.
+                    if ($e->getCode() == 403) {
+                        $body = $e->getResponse()->json(['object' => true])->{'nl.divide.iq'};
 
-        // Check if a refresh token exists.
-        if ($this->refreshToken) {
-            // Attempt to use the refresh token.
-            try {
-                $this->refresh();
-                return;
-            } catch (RequestException $e) {
-                // Check if the exception is due to an HTTP 403.
-                if ($e->getCode() == 403) {
-                    $body = $e->getResponse()->json(['object' => true])->{'nl.divide.iq'};
-
-                    // Check if the error is indeed a "TokenExpired" error, as
-                    // expected.
-                    if ($body->answer != 'TokenExpired') {
+                        // Check if the error is indeed a "TokenExpired" error,
+                        // as expected.
+                        if ($body->answer != 'TokenExpired') {
+                            // Token is expired; refreshing unsuccessful.
+                            $success = false;
+                        } else {
+                            // Unexpected error. Pass it up the stack.
+                            throw $e;
+                        }
+                    } else {
                         // Unexpected error. Pass it up the stack.
                         throw $e;
                     }
-                } else {
-                    // Unexpected error. Pass it up the stack.
-                    throw $e;
                 }
+
+                // No exception thrown, refresh successful.
+                $success = true;
+            } else {
+                // There is no refresh token to use; refreshing unsuccessful.
+                $success = false;
+            }
+
+            // If refreshing failed, login from scratch and then authenticate.
+            if (!$success) {
+                $this->login()->authenticate();
             }
         }
 
-        // If all else failed, login from scratch and then authenticate.
-        $this->login()->authenticate();
+        // Request the settings if needed.
+        if (!$this->settings) {
+            $response = $this->client->get('settings', [
+                'headers' => ['Authentication' => $this->accessToken->getToken()],
+            ]);
+
+            $body = $response->json(['object' => true])->{'nl.divide.iq'};
+            $this->settings = new Settings($body->services, $body->settings_updated);
+        }
     }
 
     /**
