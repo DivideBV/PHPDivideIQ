@@ -18,8 +18,7 @@
  */
 
 /**
- * @todo
- * - Track settings.
+ * @todo Track settings.
  */
 
 use GuzzleHttp\Client as HttpClient;
@@ -107,9 +106,8 @@ class DivideIQ implements \JsonSerializable
      *
      * @see http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods
      *
-     * @todo
-     * - Add list of services to automagically connect to.
-     * - Automatically update settings object.
+     * @todo Add list of services to automagically connect to.
+     * @todo Automatically update settings object.
      */
     public function request($serviceName, $payload = [], $method = 'GET')
     {
