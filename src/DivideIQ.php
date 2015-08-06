@@ -219,8 +219,7 @@ class DivideIQ implements \JsonSerializable
                         // Unexpected error. Pass it up the stack.
                         throw $e;
                     }
-                }
-                else {
+                } else {
                     // Unexpected error. Pass it up the stack.
                     throw $e;
                 }
