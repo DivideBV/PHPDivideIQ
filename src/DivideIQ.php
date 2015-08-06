@@ -51,21 +51,21 @@ class DivideIQ implements \JsonSerializable
     /**
      * The authentication token and its expiration date.
      *
-     * @var array
+     * @var Token
      */
     protected $authToken;
 
     /**
      * The access token and its expiration date.
      *
-     * @var array
+     * @var Token
      */
     protected $accessToken;
 
     /**
      * The refresh token.
      *
-     * @var array
+     * @var Token
      */
     protected $refreshToken;
 
