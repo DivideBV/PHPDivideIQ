@@ -72,6 +72,13 @@ class DivideIQ implements \JsonSerializable
     protected $settings;
 
     /**
+     * The file to use for persisting the client's connection details.
+     *
+     * @var \SplFileObject
+     */
+    protected $file;
+
+    /**
      * Creates a Divide.IQ client.
      *
      * @param string $username
@@ -105,6 +112,27 @@ class DivideIQ implements \JsonSerializable
         // Store the credentials in the object.
         $this->username = $username;
         $this->password = $password;
+    }
+
+    /**
+     * Destructor.
+     */
+    public function __destruct()
+    {
+        if (isset($this->file) && $this->file->isWritable()) {
+            $this->file->ftruncate(0);
+            $this->file->fwrite($this->toJson());
+        }
+    }
+
+    /**
+     * Set file.
+     *
+     * @param \SplFileObject $file
+     */
+    public function setFile(\SplFileObject $file)
+    {
+        $this->file = $file;
     }
 
     /**
@@ -177,6 +205,18 @@ class DivideIQ implements \JsonSerializable
     }
 
     /**
+     *
+     */
+    public static function fromFile(\SplFileObject $file)
+    {
+        $file->rewind();
+        $object = static::fromJson($file->fread($file->getSize()));
+        $object->file = $file;
+
+        return $object;
+    }
+
+    /**
      * Unserializes the object from JSON.
      *
      * @param string $json
@@ -190,7 +230,7 @@ class DivideIQ implements \JsonSerializable
         $data = json_decode($json);
 
         // Recreate the object.
-        $object = new static($data->url, $data->username, $data->password);
+        $object = new static($data->username, $data->password);
         $object->authToken = Token::fromJson(json_encode($data->authToken));
         $object->accessToken = Token::fromJson(json_encode($data->accessToken));
         $object->refreshToken = Token::fromJson(json_encode($data->refreshToken));
