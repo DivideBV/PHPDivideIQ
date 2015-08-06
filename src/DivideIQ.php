@@ -137,7 +137,7 @@ class DivideIQ implements \JsonSerializable
         // Parse the response body.
         $body = $response->json(['object' => true])->{'nl.divide.iq'};
 
-        // Return the only the response content, without the metadata.
+        // Return only the response content, without the metadata.
         return $body->response->content;
     }
 
