@@ -48,13 +48,20 @@ class Settings implements \JsonSerializable
     }
 
     /**
-     * Gets the available services.
+     * Gets the path of a service.
+     *
+     * @param string $serviceName
      *
      * @return string
      */
-    public function getServices()
+    public function getPath($serviceName)
     {
-        return $this->services;
+        if (in_array($serviceName, $this->services)) {
+            return str_replace('_', '/', $serviceName);
+        } else {
+            $services = implode(', ', $this->services);
+            throw new \Exception("Service \"{$serviceName}\" is not one of: {$services}");
+        }
     }
 
     /**

@@ -17,10 +17,6 @@
  * along with PHPDivideIQ.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @todo Track settings.
- */
-
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\RequestException;
 
@@ -123,17 +119,13 @@ class DivideIQ implements \JsonSerializable
      *     `GET`.
      *
      * @see http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods
-     *
-     * @todo Add list of services to automagically connect to.
-     * @todo Automatically update settings object.
      */
     public function request($serviceName, $payload = [], $method = 'GET')
     {
         // Setup the connection.
         $this->setup();
 
-        //$path = $this->services[$serviceName]->path;
-        $path = $serviceName;
+        $path = $this->settings->getPath($serviceName);
 
         switch ($method) {
             case 'GET':
@@ -275,7 +267,13 @@ class DivideIQ implements \JsonSerializable
             ]);
 
             $body = $response->json(['object' => true])->{'nl.divide.iq'};
-            $this->settings = new Settings($body->services, $body->settings_updated);
+            $services = [];
+            foreach ($body->services as $service) {
+                $services[] = $service->code;
+            }
+
+            // Create new settings object.
+            $this->settings = new Settings($services, $body->settings_updated);
         }
     }
 
