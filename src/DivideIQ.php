@@ -85,19 +85,24 @@ class DivideIQ implements \JsonSerializable
      *     The username used to authenticate.
      * @param string $password
      *     The password used to authenticate.
-     * @param bool $staging
-     *     Whether to use the staging environment. Defaults to false
-     *     (production environment).
+     * @param string $environment
+     *     The environment to use. May be one of the following:
+     *     - `production`. This is the default.
+     *     - `staging`.
+     *     - A URL to an installation of IQ.
      */
-    public function __construct($username, $password, $staging = false)
+    public function __construct($username, $password, $environment = 'production')
     {
         // The URL of the Divide.IQ environment.
-        switch ($staging) {
-            case true:
+        switch ($environment) {
+            case 'production':
                 $base_url = 'https://iqservice.divide.nl/';
                 break;
-            case false:
+            case 'staging':
                 $base_url = 'https://server.divide.nl/divide.api/';
+                break;
+            default:
+                $base_url = $environment;
                 break;
         }
 
@@ -230,7 +235,7 @@ class DivideIQ implements \JsonSerializable
         $data = json_decode($json);
 
         // Recreate the object.
-        $object = new static($data->username, $data->password);
+        $object = new static($data->username, $data->password, $data->url);
         $object->authToken = Token::fromJson(json_encode($data->authToken));
         $object->accessToken = Token::fromJson(json_encode($data->accessToken));
         $object->refreshToken = Token::fromJson(json_encode($data->refreshToken));
