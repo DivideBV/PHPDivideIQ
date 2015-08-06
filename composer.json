@@ -8,6 +8,10 @@
         "php": ">=5.4.0",
         "guzzlehttp/guzzle": "~5.0"
     },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "2.*",
+        "apigen/apigen": "^4.1"
+    },
     "autoload": {
         "psr-4": {
             "DivideBV\\PHPDivideIQ\\": ["src"]
