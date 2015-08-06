@@ -13,12 +13,12 @@ Example Usage
 ```php
 use DivideBV\PHPDivideIQ\PHPDivideIQ;
 
-$url = 'http://divide.iq.example.com/';
 $username = 'user';
 $password = 'password';
+$staging = true;
 
 // Create a DivideIQ client.
-$client = new DivideIQ($url, $username, $password);
+$client = new DivideIQ($username, $password, $staging);
 
 // Access a resource provided by this Divide.IQ server.
 $result = $client->request('stockbase/stock');
