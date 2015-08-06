@@ -148,6 +148,15 @@ class DivideIQ implements \JsonSerializable
         // Parse the response body.
         $body = $response->json(['object' => true])->{'nl.divide.iq'};
 
+        // Check if there was an error.
+        if (!isset($body->response->content)) {
+            $message = $body->response->answer;
+            $message .= isset($body->response->message) ? ": {$body->response->message}" : '';
+
+            // Throw an exception with the error description from the service.
+            throw new \Exception($message);
+        }
+
         // Return only the response content, without the metadata.
         return $body->response->content;
     }
@@ -245,7 +254,7 @@ class DivideIQ implements \JsonSerializable
     protected function login()
     {
         // Perform a request with the login credentials in the request header.
-        $response = $this->client->get('login', [
+        $response = $this->client->get('services/login', [
             'headers' => ['username'=> $this->username, 'password' => $this->password],
         ]);
 
