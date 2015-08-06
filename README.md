@@ -21,5 +21,5 @@ $staging = true;
 $client = new DivideIQ($username, $password, $staging);
 
 // Access a resource provided by this Divide.IQ server.
-$result = $client->request('stockbase/stock');
+$result = $client->request('stockbase_stock');
 ```
