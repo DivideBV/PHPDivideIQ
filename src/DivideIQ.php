@@ -71,15 +71,26 @@ class DivideIQ implements \JsonSerializable
     /**
      * Creates a Divide.IQ client.
      *
-     * @param string $base_url
-     *     The URL of the Divide.IQ server.
      * @param string $username
      *     The username used to authenticate.
      * @param string $password
      *     The password used to authenticate.
+     * @param bool $staging
+     *     Whether to use the staging environment. Defaults to false
+     *     (production environment).
      */
-    public function __construct($base_url, $username, $password)
+    public function __construct($username, $password, $staging = false)
     {
+        // The URL of the Divide.IQ environment.
+        switch ($staging) {
+            case true:
+                $base_url = 'https://iqservice.divide.nl/';
+                break;
+            case false:
+                $base_url = 'https://server.divide.nl/divide.api/';
+                break;
+        }
+
         // Create the HTTP client.
         $this->client = new HttpClient([
             'base_url' => $base_url,
