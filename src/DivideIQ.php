@@ -29,7 +29,7 @@ class DivideIQ implements \JsonSerializable
     /**
      * The HTTP client used to establish the connection with Divide.IQ.
      *
-     * @var \GuzzleHttp\Client
+     * @var HttpClient
      */
     protected $client;
 
@@ -178,7 +178,7 @@ class DivideIQ implements \JsonSerializable
      * @param string $json
      *     The object as serialized using JSON.
      *
-     * @return DivideBV\PHPDivideIQ\DivideIQ
+     * @return DivideIQ
      *     The unserialized object.
      */
     public static function fromJson($json)
