@@ -97,7 +97,7 @@ class Token implements \JsonSerializable
      * @param string $json
      *     The object as serialized using JSON.
      *
-     * @return DivideBV\PHPDivideIQ\Token
+     * @return Token
      *     The unserialized object.
      */
     public static function fromJson($json)
