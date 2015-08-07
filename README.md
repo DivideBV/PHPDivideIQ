@@ -17,8 +17,17 @@ $username = 'user';          // You will receive this from the provider.
 $password = 'password';      // You will receive this from the provider.
 $environment = 'production'; // May also be `staging` or an arbitrary URL.
 
-// Create a DivideIQ client.
-$client = new DivideIQ($username, $password, $environment);
+// A file storing the connection status.
+$file = new SplFileObject('persist.iq.txt', 'c+');
+
+if ($file->getSize()) {
+    // The file already exists, instantiate DivideIQ using the file.
+    $divideIq = DivideBV\PHPDivideIQ\DivideIQ::fromFile($file);
+} else {
+    // File doesn't exist. Instantiate DivideIQ using the constructor.
+    $divideIq = new DivideBV\PHPDivideIQ\DivideIQ($username, $password, $environment);
+    $divideIq->setFile($file);
+}
 
 // Access a resource provided by this Divide.IQ server.
 $result = $client->request('stockbase_stock');
