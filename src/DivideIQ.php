@@ -120,7 +120,7 @@ class DivideIQ implements \JsonSerializable
     }
 
     /**
-     * Destructor.
+     * Saves the current connection to `$this->file` if set.
      */
     public function __destruct()
     {
@@ -131,9 +131,11 @@ class DivideIQ implements \JsonSerializable
     }
 
     /**
-     * Set file.
+     * Set the file to use for persisting the connection details.
      *
      * @param \SplFileObject $file
+     *     The file to store connection details to. Should be openend using the
+     *     `c+` mode.
      */
     public function setFile(\SplFileObject $file)
     {
@@ -210,7 +212,14 @@ class DivideIQ implements \JsonSerializable
     }
 
     /**
+     * Unserializes the object from JSON contained in the given file.
      *
+     * @param \SplFileObject $file
+     *     The file to be read from. Since it may also be written to, it should
+     *     be opened with mode `c+`.
+     *
+     * @return DivideIQ
+     *     The unserialized object.
      */
     public static function fromFile(\SplFileObject $file)
     {
