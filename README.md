@@ -30,10 +30,10 @@ $file = new SplFileObject('persist.iq.txt', 'c+');
 
 if ($file->getSize()) {
     // The file already exists, instantiate DivideIQ using the file.
-    $divideIq = DivideBV\PHPDivideIQ\DivideIQ::fromFile($file);
+    $divideIq = DivideIQ::fromFile($file);
 } else {
     // File doesn't exist. Instantiate DivideIQ using the constructor.
-    $divideIq = new DivideBV\PHPDivideIQ\DivideIQ($username, $password, $environment);
+    $divideIq = new DivideIQ($username, $password, $environment);
     $divideIq->setFile($file);
 }
 
