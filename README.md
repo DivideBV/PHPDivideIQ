@@ -38,5 +38,5 @@ if ($file->getSize()) {
 }
 
 // Access a resource provided by this Divide.IQ server.
-$result = $client->request('stockbase_stock');
+$result = $divideIq->request('stockbase_stock');
 ```
