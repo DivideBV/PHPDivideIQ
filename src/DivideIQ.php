@@ -126,6 +126,7 @@ class DivideIQ implements \JsonSerializable
     {
         if (isset($this->file) && $this->file->isWritable()) {
             $this->file->ftruncate(0);
+            $this->file->rewind();
             $this->file->fwrite($this->toJson());
         }
     }
