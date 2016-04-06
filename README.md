@@ -19,7 +19,7 @@ Example Usage
 =============
 
 ```php
-use DivideBV\PHPDivideIQ\PHPDivideIQ;
+use DivideBV\PHPDivideIQ\DivideIQ;
 
 $username = 'user';          // You will receive this from the provider.
 $password = 'password';      // You will receive this from the provider.
