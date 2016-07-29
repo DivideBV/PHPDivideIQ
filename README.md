@@ -15,7 +15,7 @@ Installation
 
 `composer require dividebv/phpdivideiq`
 
-Example Usage
+Example Usage Stock GET
 =============
 
 ```php
@@ -39,4 +39,82 @@ if ($file->getSize()) {
 
 // Access a resource provided by this Divide.IQ server.
 $result = $divideIq->request('stockbase_stock');
+```
+
+Example Usage orderRequest POST
+=============
+```php
+use DivideBV\PHPDivideIQ\DivideIQ;
+use DivideBV\PHPDivideIQ\Models\OrderDelivery;
+use DivideBV\PHPDivideIQ\Models\OrderHeader;
+use DivideBV\PHPDivideIQ\Models\Orderline;
+use DivideBV\PHPDivideIQ\Models\OrderRequest;
+use DivideBV\PHPDivideIQ\Models\Person;
+use DivideBV\PHPDivideIQ\Models\Address;
+use GuzzleHttp\Exception\RequestException;
+ 
+
+
+$person = new Person(); // Requires surname of customer.
+$address = new Address(); // Requires Street, StreetNumber, Zipcode, City and CountryCode in ISO3 format. (NLD)
+$orderDelivery = new OrderDelivery(); // Holds Person and Address to deliver.
+$orderLine1 = new Orderline(); // Holds EAN, Amount, and Number of the number of orderline (1).
+$orderLine2 = new Orderline(); // Holds EAN, Amount, and Number of the number of orderline (2).
+$orderHeader = new OrderHeader(); // Holds orderNumber, Timestamp, and additional information.
+$orderRequest = new OrderRequest(); // Holds orderHeader, OrderLines, and OrderDelivery
+ 
+$person->setGender('Male');
+$person->setInitials('J.');
+$person->setFirstName('John');
+$person->setSurname('Doe');
+$person->setCompany('JohnDoeCompany');
+ 
+$address->setStreet('Examplestreet');
+$address->setStreetNumber('33');
+$address->setStreetNumberAdditition('b');
+$address->setZipcode('1234AB');
+$address->setCity('Amsterdam');
+$address->setCountryCode('NLD');
+ 
+$orderLine1->setNumber(1); // Line number
+$orderLine1->setEan('2000000000003'); // EAN
+$orderLine1->setAmount(3); // Amount/Quantity
+ 
+$orderLine2->setNumber(2);
+$orderLine2->setEan('2000000000002');
+$orderLine2->setAmount(10);
+ 
+$orderHeader->setOrderNumber(40001);
+$orderHeader->setAttention("Testorder");
+$orderHeader->setTimestamp(new DateTime());
+ 
+$orderDelivery->setPerson($person);
+$orderDelivery->setAddress($address);
+ 
+// OrderLines are not implemented to support REST yet
+// $orderRequest->addOrderLine($orderLine1);
+// $orderRequest->addOrderLine($orderLine2);
+ 
+$orderRequest->setOrderHeader($orderHeader);
+$orderRequest->setOrderDelivery($orderDelivery);
+
+ 
+header('Content-Type: application/json');
+ 
+// Try to do the POST with orderRequest Model.
+try {
+    $postResponse = $divideIq->request('stockbase_orderrequest', $orderRequest->toArray(), 'POST');
+     
+    if($postResponse->StatusCode == 1){
+        echo 'stockbase orderRequest posted successfully. ' . PHP_EOL . PHP_EOL;
+         
+        // Will return result object with created Items.
+        print_r($postResponse->Items); 
+    }
+} catch (RequestException $e) {
+    echo $e->getRequest() . "\n";
+    if ($e->hasResponse()) {
+        echo $e->getResponse() . "\n";
+    }
+}
 ```
