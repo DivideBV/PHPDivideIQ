@@ -14,7 +14,8 @@
     },
     "autoload": {
         "psr-4": {
-            "DivideBV\\PHPDivideIQ\\": ["src"]
+            "DivideBV\\PHPDivideIQ\\": ["src"],
+            "DivideBV\\PHPDivideIQ\\Models\\": ["src/Models"]
         }
     }
 }
