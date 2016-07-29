@@ -19,6 +19,7 @@
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\RequestException;
+use HttpResponseException;
 
 class DivideIQ implements \JsonSerializable
 {
