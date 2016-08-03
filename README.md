@@ -15,7 +15,7 @@ Installation
 
 `composer require dividebv/phpdivideiq`
 
-Example Usage Stock GET
+Example Usage
 =============
 
 ```php
