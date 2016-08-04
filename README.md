@@ -42,7 +42,7 @@ $result = $divideIq->request('stockbase_stock');
 ```
 
 Example Usage orderRequest POST
-=============
+===============================
 ```php
 use DivideBV\PHPDivideIQ\DivideIQ;
 use DivideBV\PHPDivideIQ\Models;
