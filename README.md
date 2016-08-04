@@ -50,7 +50,7 @@ use DivideBV\PHPDivideIQ\Models;
  
 
 $person = new Models\Person(); // Requires surname of customer.
-$address = new Models\Address(); // Requires Street, StreetNumber, Zipcode, City and CountryCode in ISO3 format. (NLD)
+$address = new Models\Address(); // Requires Street, StreetNumber, Zipcode, City and CountryCode in ISO 3166-1 alpha-3 format. (e.g.: NLD)
 $orderDelivery = new Models\OrderDelivery(); // Holds Person and Address to deliver.
 $orderLine1 = new Models\Orderline(); // Holds EAN, Amount, and Number of the number of orderline (1).
 $orderLine2 = new Models\Orderline(); // Holds EAN, Amount, and Number of the number of orderline (2).
@@ -99,7 +99,7 @@ header('Content-Type: application/json');
 try {
     $postResponse = $divideIq->request('stockbase_orderrequest', $orderRequest->toArray(), 'POST');
      
-    if($postResponse->StatusCode == 1){
+    if ($postResponse->StatusCode == 1) {
         echo 'stockbase orderRequest posted successfully. ' . PHP_EOL . PHP_EOL;
          
         // Will return result object with created Items.
