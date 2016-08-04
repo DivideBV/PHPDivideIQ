@@ -1,11 +1,22 @@
 <?php namespace DivideBV\PHPDivideIQ\Models;
 
 /**
- * Created by PhpStorm.
- * User: Nav
- * Date: 28-07-16
- * Time: 12:14
+ * This file is part of PHPDivideIQ.
+ *
+ * PHPDivideIQ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * PHPDivideIQ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with PHPDivideIQ.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 class Address
 {
     /**
@@ -149,13 +160,13 @@ class Address
 
     public function toArray()
     {
-        return array(
+        return [
             'Street' => $this->Street,
             'StreetNumber' => $this->StreetNumber,
             'StreetNumberAddition' => $this->StreetNumberAdditition,
             'ZipCode' => $this->ZipCode,
             'City' => $this->City,
-            'CountryCode' => $this->CountryCode
-        );
+            'CountryCode' => $this->CountryCode,
+        ];
     }
 }
