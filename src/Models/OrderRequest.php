@@ -87,21 +87,13 @@ class OrderRequest implements \JsonSerializable
     public function setOrderDelivery(OrderDelivery $OrderDelivery)
     {
         $this->OrderDelivery = $OrderDelivery;
-        return $this;
-    }
 
-    public function toArray()
-    {
-        return [
-            'OrderHeader' => $this->OrderHeader->toArray(),
-            'OrderLines' => $this->OrderLines,
-            'OrderDelivery' => $this->OrderDelivery->toArray()
-        ];
+        return $this;
     }
 
     public function toJson()
     {
-        return json_encode($this->toArray());
+        return json_encode($this->jsonSerialize());
     }
 
     /**
