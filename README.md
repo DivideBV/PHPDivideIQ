@@ -97,11 +97,10 @@ header('Content-Type: application/json');
  
 // Try to do the POST with orderRequest Model.
 try {
-    $postResponse = $divideIq->request('stockbase_orderrequest', $orderRequest->toArray(), 'POST');
+    $postResponse = $divideIq->request('stockbase_orderrequest', $orderRequest->jsonSerialize(), 'POST');
      
     if ($postResponse->StatusCode == 1) {
-        echo 'stockbase orderRequest posted successfully. ' . PHP_EOL . PHP_EOL;
-         
+        echo 'stockbase orderRequest posted successfully.';
         // Will return result object with created Items.
         print_r($postResponse->Items); 
     }
