@@ -157,16 +157,4 @@ class Address
         $this->CountryCode = $CountryCode;
         return $this;
     }
-
-    public function toArray()
-    {
-        return [
-            'Street' => $this->Street,
-            'StreetNumber' => $this->StreetNumber,
-            'StreetNumberAddition' => $this->StreetNumberAdditition,
-            'ZipCode' => $this->ZipCode,
-            'City' => $this->City,
-            'CountryCode' => $this->CountryCode,
-        ];
-    }
 }

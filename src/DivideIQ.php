@@ -183,7 +183,6 @@ class DivideIQ implements \JsonSerializable
 
         // Parse the response body.
         $body = $response->json(['object' => true])->{'nl.divide.iq'};
-
         // Check if the settings object is outdated. If so, unset it.
         if ($this->settings->isOutdated($body->settings_updated)) {
             unset($this->settings);

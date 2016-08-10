@@ -66,12 +66,4 @@ class OrderDelivery
         return $this;
     }
 
-    public function toArray()
-    {
-        return [
-            'Person' => $this->Person->toArray(),
-            'Address' => $this->Address->toArray(),
-        ];
-    }
-
 }

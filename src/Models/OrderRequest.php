@@ -68,7 +68,7 @@ class OrderRequest implements \JsonSerializable
      */
     public function addOrderLine(Orderline $OrderLine)
     {
-        $this->OrderLines[] = $OrderLine->toArray();
+        $this->OrderLines[] = $OrderLine;
         return $this;
     }
 
@@ -93,7 +93,7 @@ class OrderRequest implements \JsonSerializable
 
     public function toJson()
     {
-        return json_encode($this->jsonSerialize());
+        return json_encode($this);
     }
 
     /**
@@ -106,9 +106,9 @@ class OrderRequest implements \JsonSerializable
     function jsonSerialize()
     {
         return [
-            'OrderHeader' => $this->OrderHeader->toArray(),
+            'OrderHeader' => $this->OrderHeader,
             'OrderLines' => $this->OrderLines,
-            'OrderDelivery' => $this->OrderDelivery->toArray(),
+            'OrderDelivery' => $this->OrderDelivery,
         ];
     }
 }

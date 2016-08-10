@@ -152,16 +152,4 @@ class Person
         $this->Company = $Company;
         return $this;
     }
-
-    public function toArray()
-    {
-        return [
-            'Gender' => $this->Gender,
-            'Initials' => $this->Initials,
-            'FirstName' => $this->FirstName,
-            'SurnamePrefix' => $this->SurnamePrefix,
-            'Surname' => $this->Surname,
-            'Company' => $this->Company,
-        ];
-    }
 }

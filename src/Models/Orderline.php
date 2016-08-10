@@ -94,16 +94,4 @@ class Orderline
         $this->Amount = $Amount;
         return $this;
     }
-
-    public function toArray()
-    {
-        return [
-            'Number' => $this->Number,
-            'EAN' => $this->EAN,
-            'Amount' => $this->Amount,
-            'MetaData' => [
-                'meta' => 'data',
-            ],
-        ];
-    }
 }

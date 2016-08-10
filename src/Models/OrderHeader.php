@@ -84,13 +84,4 @@ class OrderHeader
     {
         $this->Attention = $Attention;
     }
-
-    public function toArray()
-    {
-        return [
-            'OrderNumber' => $this->OrderNumber,
-            'TimeStamp' => $this->TimeStamp->format('Y-m-d h:i:s'),
-            'Attention' => $this->Attention,
-        ];
-    }
 }
