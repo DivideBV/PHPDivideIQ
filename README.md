@@ -97,7 +97,7 @@ header('Content-Type: application/json');
  
 // Try to do the POST with orderRequest Model.
 try {
-    $postResponse = $divideIq->request('stockbase_orderrequest', $orderRequest->jsonSerialize(), 'POST');
+    $postResponse = $divideIq->request('stockbase_orderrequest', $orderRequest, 'POST');
      
     if ($postResponse->StatusCode == 1) {
         echo 'stockbase orderRequest posted successfully.';
