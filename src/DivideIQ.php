@@ -148,7 +148,7 @@ class DivideIQ implements \JsonSerializable
      *
      * @param string $serviceName
      *     The codename of the service to access.
-     * @param object $payload
+     * @param array|\JsonSerializable $payload
      *     (optional) The data (OrderRequest object) to send with the request.
      * @param string $method
      *     (optional) The HTTP method to use to access the service. Defaults to
@@ -183,6 +183,7 @@ class DivideIQ implements \JsonSerializable
 
         // Parse the response body.
         $body = $response->json(['object' => true])->{'nl.divide.iq'};
+
         // Check if the settings object is outdated. If so, unset it.
         if ($this->settings->isOutdated($body->settings_updated)) {
             unset($this->settings);
