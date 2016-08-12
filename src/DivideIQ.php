@@ -148,8 +148,8 @@ class DivideIQ implements \JsonSerializable
      *
      * @param string $serviceName
      *     The codename of the service to access.
-     * @param array $payload
-     *     (optional) The data to send with the request.
+     * @param array|\JsonSerializable $payload
+     *     (optional) The data (OrderRequest object) to send with the request.
      * @param string $method
      *     (optional) The HTTP method to use to access the service. Defaults to
      *     `GET`.
@@ -175,6 +175,7 @@ class DivideIQ implements \JsonSerializable
             case 'POST':
                 $response = $this->client->post($path, [
                     'headers' => ['Authentication' => $this->accessToken->getToken()],
+                    'body' => json_encode($payload),
                 ]);
 
                 break;
