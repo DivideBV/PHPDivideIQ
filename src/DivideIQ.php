@@ -370,9 +370,11 @@ class DivideIQ implements \JsonSerializable
         $body = $response->json(['object' => true])->{'nl.divide.iq'};
         $expire = new \DateTime($body->expiration_date, new \DateTimezone('UTC'));
 
-        // Store the access and refresh tokens in the object.
+        // Store the access and refresh (if any) tokens in the object.
         $this->accessToken = new Token($body->access_token, $expire);
-        $this->refreshToken = new Token($body->refresh_token);
+        if (isset($body->refresh_token)) {
+            $this->refreshToken = new Token($body->refresh_token);
+        }
 
         return $this;
     }
