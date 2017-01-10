@@ -279,6 +279,9 @@ class DivideIQ implements \JsonSerializable
         if (!$this->accessToken || $this->accessToken->expired()) {
             // Check if a valid refresh token exists.
             if ($this->refreshToken && $this->refreshToken->getToken()) {
+                // Refresh is successful unless explicitly set to false.
+                $refreshSuccess = true;
+
                 // Attempt to use the refresh token.
                 try {
                     $this->refresh();
@@ -291,7 +294,7 @@ class DivideIQ implements \JsonSerializable
                         // as expected.
                         if ($body->answer == 'TokenExpired') {
                             // Token is expired; refreshing unsuccessful.
-                            $success = false;
+                            $refreshSuccess = false;
                         } else {
                             // Unexpected error. Pass it up the stack. This
                             // might be a "TokenEmpty" error, but that would
@@ -304,16 +307,13 @@ class DivideIQ implements \JsonSerializable
                         throw $e;
                     }
                 }
-
-                // No exception thrown, refresh successful.
-                $success = true;
             } else {
                 // There is no refresh token to use; refreshing unsuccessful.
-                $success = false;
+                $refreshSuccess = false;
             }
 
             // If refreshing failed, login from scratch and then authenticate.
-            if (!$success) {
+            if (!$refreshSuccess) {
                 $this->login()->authenticate();
             }
         }
