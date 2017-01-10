@@ -289,11 +289,14 @@ class DivideIQ implements \JsonSerializable
 
                         // Check if the error is indeed a "TokenExpired" error,
                         // as expected.
-                        if ($body->answer != 'TokenExpired') {
+                        if ($body->answer == 'TokenExpired') {
                             // Token is expired; refreshing unsuccessful.
                             $success = false;
                         } else {
-                            // Unexpected error. Pass it up the stack.
+                            // Unexpected error. Pass it up the stack. This
+                            // might be a "TokenEmpty" error, but that would
+                            // still be unexpected, because the token value was
+                            // checked beforehand.
                             throw $e;
                         }
                     } else {
