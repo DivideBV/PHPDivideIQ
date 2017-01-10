@@ -277,8 +277,8 @@ class DivideIQ implements \JsonSerializable
     {
         // Check if a valid access token exists.
         if (!$this->accessToken || $this->accessToken->expired()) {
-            // Check if a refresh token exists.
-            if ($this->refreshToken) {
+            // Check if a valid refresh token exists.
+            if ($this->refreshToken && $this->refreshToken->getToken()) {
                 // Attempt to use the refresh token.
                 try {
                     $this->refresh();
