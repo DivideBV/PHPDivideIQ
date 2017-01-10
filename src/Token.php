@@ -104,8 +104,10 @@ class Token implements \JsonSerializable
     {
         $data = json_decode($json);
 
+        $expireDate = is_null($data->expire) ? null : new \DateTime($data->expire, new \DateTimeZone('UTC'));
+
         // Recreate the object.
-        return new static($data->token, new \DateTime($data->expire, new \DateTimeZone('UTC')));
+        return new static($data->token, $expireDate);
     }
 
     /**
