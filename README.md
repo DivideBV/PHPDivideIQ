@@ -40,3 +40,13 @@ if ($file->getSize()) {
 // Access a resource provided by this Divide.IQ server.
 $result = $divideIq->request('stockbase_stock');
 ```
+
+Debugging
+=========
+
+If you implemented this library like the example above, then the first step in
+debugging would be to remove the `persist.iq.txt` file. It's a JSON file with
+connection credentials. Removing it will force the library to start afresh by
+logging in with your username and password.
+
+Note: this only helps when the connection previously worked.
