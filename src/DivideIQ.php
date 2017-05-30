@@ -175,6 +175,7 @@ class DivideIQ implements \JsonSerializable
             case 'POST':
                 $response = $this->client->post($path, [
                     'headers' => ['Authentication' => $this->accessToken->getToken()],
+                    'json' => $payload,
                 ]);
 
                 break;
