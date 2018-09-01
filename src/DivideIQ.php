@@ -22,6 +22,8 @@ use GuzzleHttp\Exception\RequestException;
 
 class DivideIQ implements \JsonSerializable
 {
+    const DEFAULT_REQUEST_TIMEOUT = 60.0;
+    
     /**
      * The HTTP client used to establish the connection with Divide.IQ.
      *
@@ -90,8 +92,10 @@ class DivideIQ implements \JsonSerializable
      *     - `production`. This is the default.
      *     - `staging`.
      *     - A URL to an installation of IQ.
+     * @param array $clientOptions
+     *     Option overrides for the HTTP Client
      */
-    public function __construct($username, $password, $environment = 'production')
+    public function __construct($username, $password, $environment = 'production', array $clientOptions = [])
     {
         // The URL of the Divide.IQ environment.
         switch ($environment) {
@@ -105,14 +109,15 @@ class DivideIQ implements \JsonSerializable
                 $base_url = $environment;
                 break;
         }
+        
+        $defaultClientOptions = [
+            'base_uri' => $base_url,
+            'headers' => ['Content-Type' => 'application/json'],
+            'timeout' => self::DEFAULT_REQUEST_TIMEOUT,
+        ];
 
         // Create the HTTP client.
-        $this->client = new HttpClient([
-            'base_url' => $base_url,
-            'defaults' => [
-                'headers' => ['Content-Type' => 'application/json'],
-            ],
-        ]);
+        $this->client = new HttpClient($clientOptions + $defaultClientOptions);
 
         // Store the credentials in the object.
         $this->username = $username;
@@ -182,7 +187,8 @@ class DivideIQ implements \JsonSerializable
         }
 
         // Parse the response body.
-        $body = $response->json(['object' => true])->{'nl.divide.iq'};
+        $json = json_decode($response->getBody());
+        $body = $json->{'nl.divide.iq'};
 
         // Check if the settings object is outdated. If so, unset it.
         if ($this->settings->isOutdated($body->settings_updated)) {
@@ -261,7 +267,7 @@ class DivideIQ implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'url' => $this->client->getBaseUrl(),
+            'url' => (string)$this->client->getConfig('base_uri'),
             'username' => $this->username,
             'password' => $this->password,
             'authToken' => $this->authToken,
@@ -289,7 +295,9 @@ class DivideIQ implements \JsonSerializable
                 } catch (RequestException $e) {
                     // Check if the exception is due to an HTTP 403.
                     if ($e->getCode() == 403) {
-                        $body = $e->getResponse()->json(['object' => true])->{'nl.divide.iq'};
+                        $response = $e->getResponse();
+                        $json = json_decode($response->getBody());
+                        $body = $json->{'nl.divide.iq'};
 
                         // Check if the error is indeed a "TokenExpired" error,
                         // as expected.
@@ -325,7 +333,8 @@ class DivideIQ implements \JsonSerializable
                 'headers' => ['Authentication' => $this->accessToken->getToken()],
             ]);
 
-            $body = $response->json(['object' => true])->{'nl.divide.iq'};
+            $json = json_decode($response->getBody());
+            $body = $json->{'nl.divide.iq'};
             $services = [];
             foreach ($body->services as $service) {
                 $services[] = $service->code;
@@ -347,7 +356,8 @@ class DivideIQ implements \JsonSerializable
         ]);
 
         // Parse the response body.
-        $body = $response->json(['object' => true])->{'nl.divide.iq'};
+        $json = json_decode($response->getBody());
+        $body = $json->{'nl.divide.iq'};
         $expire = new \DateTime($body->expiration_date, new \DateTimezone('UTC'));
 
         // Store the authentication token in the object.
@@ -371,7 +381,8 @@ class DivideIQ implements \JsonSerializable
         ]);
 
         // Parse the response body.
-        $body = $response->json(['object' => true])->{'nl.divide.iq'};
+        $json = json_decode($response->getBody());
+        $body = $json->{'nl.divide.iq'};
         $expire = new \DateTime($body->expiration_date, new \DateTimezone('UTC'));
 
         // Store the access and refresh (if any) tokens in the object.
