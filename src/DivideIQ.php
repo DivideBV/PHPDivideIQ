@@ -209,6 +209,26 @@ class DivideIQ implements \JsonSerializable
     }
 
     /**
+     * Downloads a file using current client configuration and saves it at the specified destination.
+     *
+     * @param string|\Psr\Http\Message\UriInterface $uri File URI.
+     * @param string|resource|\Psr\Http\Message\StreamInterface $destination Destination where the file should be saved to.
+     */
+    public function download($uri, $destination)
+    {
+        // Setup the connection.
+        $this->setup();
+
+        $this->client->get($uri, [
+            'headers' => [
+                'Content-Type' => null,
+                'Authentication' => $this->accessToken->getToken(),
+            ],
+            'sink' => $destination,
+        ]);
+    }
+
+    /**
      * Serializes the object using JSON.
      *
      * @return string
