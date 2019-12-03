@@ -54,6 +54,7 @@ Note: this only helps when the connection previously worked.
 
 Orderrequest
 ============
+```php
 $this->result = $this->divideIq->request('stockbase_orderrequest', $this->payload, 'POST');
 
 $this->payload = array(
@@ -61,8 +62,10 @@ $this->payload = array(
                 'OrderHeader' => (object) $orderHeader,
                 'OrderLines' => $orderLines,
             );
+```            
 Example
 ============
+```php
 $this->payload = {
        "OrderDelivery": {
          "Person": {
@@ -107,3 +110,4 @@ $this->payload = {
      "Price": "3.95"
     }]
   }
+```
