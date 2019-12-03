@@ -50,3 +50,60 @@ connection credentials. Removing it will force the library to start afresh by
 logging in with your username and password.
 
 Note: this only helps when the connection previously worked.
+
+
+Orderrequest
+============
+$this->result = $this->divideIq->request('stockbase_orderrequest', $this->payload, 'POST');
+
+$this->payload = array(
+                'OrderDelivery' => (object) $orderDelivery,
+                'OrderHeader' => (object) $orderHeader,
+                'OrderLines' => $orderLines,
+            );
+Example
+============
+$this->payload = {
+       "OrderDelivery": {
+         "Person": {
+         "Gender": "Male",
+         "Initials": "J",
+         "FirstName": "John",
+         "SurnamePrefix": "",
+         "Surname": "Doe",
+         "Company": "Stockbase",
+         "EmailAddress": ""
+       },
+       "Address": {
+         "Street": "Koraalrood",
+         "StreetNumber": "33",
+         "StreetNumberAddition": "A",
+         "ZipCode": "2718SB",
+         "City": "Zoetermeer",
+         "CountryCode": "NLD"
+       }
+     },
+     "OrderHeader": {
+       "OrderNumber": "1574425588",
+       "TimeStamp": "2019-11-15T15:56:36.1187035Z"
+     },
+     "OrderLines": 
+     [{
+      "Number": "1",
+      "EAN": "8700000000001",
+      "Amount": "1",
+      "Price": "1.95"
+     },
+     {
+      "Number": "2",
+      "EAN": "8700000000002",
+      "Amount": "1",
+      "Price": "2.95"
+    },
+    {
+     "Number": "3",
+     "EAN": "8700000000003",
+     "Amount": "1",
+     "Price": "3.95"
+    }]
+  }
