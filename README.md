@@ -52,7 +52,7 @@ logging in with your username and password.
 Note: this only helps when the connection previously worked.
 
 
-Orderrequest
+OrderRequest
 ============
 ```php
 $this->result = $this->divideIq->request('stockbase_orderrequest', $this->payload, 'POST');
